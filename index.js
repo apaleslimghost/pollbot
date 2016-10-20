@@ -12,6 +12,7 @@ module.exports = route({
 		console.log(body);
 
 		return {
+			response_type: 'in_channel',
 			attachments: [{
 				text: question,
 				footer: 'Don\'t get excited yet, I\'m just testing',
