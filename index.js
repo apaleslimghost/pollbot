@@ -18,7 +18,7 @@ const renderPoll = poll => ({
 		callback_id: poll.id,
 		attachment_type: 'default',
 		actions: poll.options.map((option, i) => Object.assign({}, option, {
-			text: `${option.label} ${countBadges[option.count] || '❿+'}`,
+			text: `${option.label} ${countBadges[option.count] || `❨${option.count}❩`}`,
 			type: 'button',
 			label: undefined,
 			count: undefined,
