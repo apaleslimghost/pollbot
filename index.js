@@ -8,6 +8,8 @@ const randomId = () => Math.floor(parseInt('zzzzzzzz', 36) * Math.random()).toSt
 
 const polls = new Map();
 
+const countBadges = ' ❶❷❸❹❺❻❼❽❾❿'.split('');
+
 const renderPoll = poll => ({
 	response_type: 'in_channel',
 	attachments: [{
@@ -16,7 +18,7 @@ const renderPoll = poll => ({
 		callback_id: poll.id,
 		attachment_type: 'default',
 		actions: poll.options.map((option, i) => Object.assign({}, option, {
-			text: `${option.label} ${option.count || ''}`,
+			text: `${option.label} ${countBadges[option.count] || '❿+'}`,
 			type: 'button',
 			label: undefined,
 			count: undefined,
