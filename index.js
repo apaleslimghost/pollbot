@@ -137,6 +137,6 @@ module.exports = route({
 			return redirect(res, '/?state=error');
 		}
 
-		return redirect(res, '/?state=success&team=${encodeURIComponent(team_name)}');
+		return redirect(res, `/?state=success&team=${encodeURIComponent(team_name)}`);
 	}
 });
