@@ -7,7 +7,7 @@
     "start": "nodemon -x 'node -r dotenv/config node_modules/.bin/micro' index.js",
     "now-start": "micro index.js",
     "predeploy": "./dotenv-secrets.js",
-    "deploy": "now -e CLIENT_ID=@client-id -e CLIENT_SECRET=@client-secret"
+    "deploy": "now -e CLIENT_ID=$npm_package_config_client_id -e CLIENT_SECRET=@client-secret"
   },
   "repository": {
     "type": "git",
@@ -29,6 +29,10 @@
   "devDependencies": {
     "dotenv": "^2.0.0",
     "nodemon": "^1.11.0",
+    "now": "^0.26.0",
     "param-case": "^2.1.0"
+  },
+  "config": {
+    "client-id": "2182311736.93959248274"
   }
 }

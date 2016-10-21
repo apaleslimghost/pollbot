@@ -3,11 +3,15 @@ const route = require('boulevard');
 const parseSlackBody = require('@quarterto/slack-body');
 const url = require('url');
 const fetch = require('node-fetch');
+const pack = require('./package.json');
+
+const config = {
+	clientId: pack.config['client-id'],
+	clientSecret: process.env.CLIENT_SECRET,
+};
 
 const randomId = () => Math.floor(parseInt('zzzzzzzz', 36) * Math.random()).toString(36);
-
 const polls = new Map();
-
 const countBadges = ' ❶❷❸❹❺❻❼❽❾❿'.split('');
 
 const renderPoll = poll => ({
@@ -71,7 +75,7 @@ module.exports = route({
 		${query.state === 'error' ? '<p class="error">Couldn\'t authorize with Slack. Please try again.</p>' : ''}
 		${query.state === 'success' ? `<p class="success">Added to the <strong>${query.team}</strong> Slack.</p>` : ''}
 
-		<a href="https://slack.com/oauth/authorize?scope=commands&client_id=${process.env.CLIENT_ID}">
+		<a href="https://slack.com/oauth/authorize?scope=commands&client_id=${config.clientId}">
 			<img
 				alt="Add to Slack" height="40" width="139"
 				src="https://platform.slack-edge.com/img/add_to_slack.png"
@@ -120,8 +124,8 @@ module.exports = route({
 			hostname: 'slack.com',
 			pathname: '/api/oauth.access',
 			query: {
-				client_id: process.env.CLIENT_ID,
-				client_secret: process.env.CLIENT_SECRET,
+				client_id: config.clientId,
+				client_secret: config.clientSecret,
 				code: query.code,
 				redirect_uri: query.redirect_uri,
 			}
