@@ -34,7 +34,43 @@ const votePoll = poll => action => {
 	})
 };
 
+const redirect = (res, location, status = 302) => {
+	res.setHeader('location', location); // location
+	return send(res, status);
+};
+
 module.exports = route({
+	'/'(req, res) {
+		const {host} = req.headers;
+		const {query} = url.parse(req.url, true);
+
+		res.setHeader('content-type', 'text/html');
+
+		return `<!doctype html>
+		<style>
+		body {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			height: 100vh;
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+		}
+		.error {
+			color: #b1493f;
+		}
+		</style>
+
+		${query.state === 'error' ? '<p class="error">Couldn\'t authorize with Slack. Please try again.</p>' : ''}
+
+		<a href="https://slack.com/oauth/authorize?scope=commands&client_id=${process.env.CLIENT_ID}">
+			<img
+				alt="Add to Slack" height="40" width="139"
+				src="https://platform.slack-edge.com/img/add_to_slack.png"
+				srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x"/>
+		</a>`
+	},
+
 	async '/create'(req, res) {
 		const body = await parseSlackBody(req);
 		const [question, ...options] = body.text.split(',');
@@ -66,6 +102,10 @@ module.exports = route({
 
 	async '/oauth'(req, res) {
 		const {query} = url.parse(req.url, true);
+
+		if(query.error) {
+			return redirect(res, '/?state=error')
+		}
 
 		const response = await fetch(url.format({
 			protocol: 'https',
