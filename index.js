@@ -77,7 +77,7 @@ module.exports = route({
 
 		<title>📊 Pollbot</title>
 
-		<h1>Pollbot</h1>
+		<h1>📊 Pollbot</h1>
 
 		${query.state === 'error' ? '<p class="error">Couldn\'t authorize with Slack. Please try again.</p>' : ''}
 		${query.state === 'success' ? `<p class="success">Added to the <strong>${query.team}</strong> Slack.</p>` : ''}
