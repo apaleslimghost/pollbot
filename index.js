@@ -21,10 +21,9 @@ const renderPoll = poll => ({
 		callback_id: poll.id,
 		attachment_type: 'default',
 		actions: poll.options.map((option, i) => Object.assign({}, option, {
-			text: `${option.label} ${countBadges[option.count] || `❨${option.count}❩`}`,
+			text: `${option.label} ${countBadges[option.voters.size] || `❨${option.voters.size}❩`}`,
 			type: 'button',
 			label: undefined,
-			count: undefined,
 			voters: undefined,
 		})),
 	}],
@@ -34,10 +33,8 @@ const votePoll = (poll, user) => action => {
 	poll.options.forEach(pollAction => {
 		if(action.name === pollAction.name && action.value == pollAction.value) {
 			if(pollAction.voters.has(user.id)) {
-				pollAction.count--;
 				pollAction.voters.delete(user.id);
 			} else {
-				pollAction.count++;
 				pollAction.voters.add(user.id);
 			}
 		}
@@ -102,7 +99,6 @@ module.exports = route({
 				name: 'option',
 				label: option,
 				value: i,
-				count: 0,
 				voters: new Set(),
 			})),
 		};
