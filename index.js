@@ -115,6 +115,11 @@ module.exports = route({
 		const {payload} = await parseSlackBody(req);
 		const {actions, callback_id, user} = JSON.parse(payload);
 		const poll = polls.get(callback_id);
+
+		if(!poll) {
+			return send(res, 404, 'Couldn\'t find that poll, sorry.');
+		}
+
 		actions.forEach(votePoll(poll, user));
 		return renderPoll(poll);
 	},
