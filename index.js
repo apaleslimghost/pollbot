@@ -25,14 +25,21 @@ const renderPoll = poll => ({
 			type: 'button',
 			label: undefined,
 			count: undefined,
+			voters: undefined,
 		})),
 	}],
 });
 
-const votePoll = poll => action => {
+const votePoll = (poll, user) => action => {
 	poll.options.forEach(pollAction => {
 		if(action.name === pollAction.name && action.value == pollAction.value) {
-			pollAction.count++;
+			if(pollAction.voters.has(user.id)) {
+				pollAction.count--;
+				pollAction.voters.delete(user.id);
+			} else {
+				pollAction.count++;
+				pollAction.voters.add(user.id);
+			}
 		}
 	})
 };
@@ -61,7 +68,7 @@ module.exports = route({
 			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 		}
 		.success {
-			color: #a6a471;
+			color: #458b00;
 		}
 		.error {
 			color: #b1493f;
@@ -96,6 +103,7 @@ module.exports = route({
 				label: option,
 				value: i,
 				count: 0,
+				voters: new Set(),
 			})),
 		};
 
@@ -106,9 +114,9 @@ module.exports = route({
 
 	async '/respond'(req, res) {
 		const {payload} = await parseSlackBody(req);
-		const {actions, callback_id} = JSON.parse(payload);
+		const {actions, callback_id, user} = JSON.parse(payload);
 		const poll = polls.get(callback_id);
-		actions.forEach(votePoll(poll));
+		actions.forEach(votePoll(poll, user));
 		return renderPoll(poll);
 	},
 
