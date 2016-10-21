@@ -127,7 +127,11 @@ module.exports = route({
 			}
 		}));
 
-		const {team_name} = await response.json();
+		const {ok, team_name} = await response.json();
+
+		if(!ok) {
+			return redirect(res, '/?state=error');
+		}
 
 		return redirect(res, '/?state=success&team=${encodeURIComponent(team_name)}');
 	}
