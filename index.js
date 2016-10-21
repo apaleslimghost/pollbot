@@ -18,7 +18,6 @@ const renderPoll = poll => ({
 	response_type: 'in_channel',
 	attachments: [{
 		text: poll.question,
-		footer: `Don\'t get excited yet, I\'m just testing ${randomId()}`,
 		callback_id: poll.id,
 		attachment_type: 'default',
 		actions: poll.options.map((option, i) => Object.assign({}, option, {
