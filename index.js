@@ -134,9 +134,5 @@ module.exports = route({
 		}
 
 		return redirect(res, '/?state=success&team=${encodeURIComponent(team_name)}');
-	},
-
-	'/_env'() {
-		return process.env;
 	}
 });
