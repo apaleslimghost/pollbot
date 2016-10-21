@@ -56,6 +56,7 @@ module.exports = route({
 		res.setHeader('content-type', 'text/html');
 
 		return `<!doctype html>
+		<meta charset="utf-8">
 		<style>
 		body {
 			display: flex;
