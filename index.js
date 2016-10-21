@@ -56,12 +56,20 @@ module.exports = route({
 			height: 100vh;
 			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 		}
+		.success {
+			color: #a6a471;
+		}
 		.error {
 			color: #b1493f;
 		}
 		</style>
 
+		<title>Pollbot</title>
+
+		<h1>Pollbot</h1>
+
 		${query.state === 'error' ? '<p class="error">Couldn\'t authorize with Slack. Please try again.</p>' : ''}
+		${query.state === 'success' ? `<p class="success">Added to the <strong>${query.team}</strong> Slack.</p>` : ''}
 
 		<a href="https://slack.com/oauth/authorize?scope=commands&client_id=${process.env.CLIENT_ID}">
 			<img
@@ -104,7 +112,7 @@ module.exports = route({
 		const {query} = url.parse(req.url, true);
 
 		if(query.error) {
-			return redirect(res, '/?state=error')
+			return redirect(res, '/?state=error');
 		}
 
 		const response = await fetch(url.format({
@@ -119,6 +127,8 @@ module.exports = route({
 			}
 		}));
 
-		return response.json();
+		const {team_name} = await response.json();
+
+		return redirect(res, '/?state=success&team=${encodeURIComponent(team_name)}');
 	}
 });
