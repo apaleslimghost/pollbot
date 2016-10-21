@@ -30,8 +30,10 @@ const renderPoll = poll => ({
 });
 
 const votePoll = (poll, user) => action => {
-	poll.options.forEach(pollAction => {
+	poll.options.forEach((pollAction, i) => {
 		if(action.name === pollAction.name && action.value == pollAction.value) {
+			poll.options.forEach((otherAction, j) => i !== j && otherAction.voters.delete(user.id));
+
 			if(pollAction.voters.has(user.id)) {
 				pollAction.voters.delete(user.id);
 			} else {
