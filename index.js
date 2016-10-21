@@ -75,7 +75,7 @@ module.exports = route({
 		}
 		</style>
 
-		<title>Pollbot</title>
+		<title>📊 Pollbot</title>
 
 		<h1>Pollbot</h1>
 
